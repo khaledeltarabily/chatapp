@@ -67,12 +67,12 @@
       methods: {
         timeoutFunction: function(){
             this.typing = false;
-            socket.emit('stopTypingMessage',this.username);
+            socket.emit('stopTypingMessage',this.username);//notify server user stop typing
         },
         key: function(event) {   
           if(this.typing == false) {
                     this.typing = true;
-                    socket.emit('typingMessage',this.username);
+                    socket.emit('typingMessage',this.username);//notify server user typing
                     this.timeout = setTimeout(this.timeoutFunction, 1800);
                 } else {
                     clearTimeout(this.timeout);
@@ -81,27 +81,27 @@
         },
         sendMessage: function () {
             if(this.message){
+              this.timeoutFunction();//Remove Typing and send
               socket.emit('message', this.message);
-              this.message = '';
-              this.timeoutFunction();
+              this.message = '';    
             }   
         },
         setUsername: function () {
             if(this.username){
                 socket.emit('join', this.username);
-                // this.username = '';
-                this.state = 1;
+                this.state = 1;//To Show Chat Room
             }      
         },
         continueWithoutUsername: function () {
           socket.emit('join', null);
-          this.state = 1;
+          this.state = 1;//To Show Chat Room
         }
       },
       created: function () {
         socket = io();
       },
       mounted: function () {
+        //recieve chat Messages 
         socket.on('message', function (message) {
           app.messages.push(message);
           // this needs to be done AFTER vue updates the page!!
@@ -110,21 +110,18 @@
             messageBox.scrollTop = messageBox.scrollHeight;
           });
         });
+        //when Guest Enter chat recieve username from server
         socket.on('join', function (username) {
             this.username = username.username; 
         }.bind(this));
-
+        //Add all users typing to Array to display all 
         socket.on('typingMessage', function (typingUsername) {
-          app.typingPerson.push(typingUsername);
-          console.log(typingUsername); 
+          app.typingPerson.push(typingUsername); 
         });
-
+        //when Any user stop typing remove from Array (and from screen)
         socket.on('stopTypingMessage', function (typingUsername) {
-          app.typingPerson.splice(app.typingPerson.indexOf(typingUsername), 1);//remove
-          console.log(typingUsername);
+          app.typingPerson.splice(app.typingPerson.indexOf(typingUsername), 1);//if find username ,remove it
         });
-
-
       }
     });
   </script>
