@@ -1,0 +1,55 @@
+body{
+    margin: 10px;
+}
+
+.chatrow li:nth-of-type(odd) {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+  }
+
+  
+ 
+  
+  .chatrow::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+  
+  .chatrow img {
+    float: left;
+    height: 45px;
+    max-width: 45px;
+    width: 70%;
+    margin-right: 10px;
+    border-radius: 50%;
+  }
+  
+  .chatrow img.right {
+    float: right;
+    margin-left: 20px;
+    margin-right:0;
+  }
+  
+  .time-right {
+    float: right;
+    color: #aaa;
+  }
+  
+  .time-left {
+    float: left;
+    color: #999;
+  }
+
+  
+  ul.list-group.list-group-striped li:nth-of-type(odd){
+    border: 2px solid #ebebeb;
+    background-color: #fafafa;
+  }
+  ul.list-group.list-group-striped li:nth-of-type(even){
+    border-color: #ccc;
+    background-color: rgb(219, 213, 213);
+  }

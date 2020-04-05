@@ -10,31 +10,39 @@
   <title>Fireside Chat</title>
 </head>
 <body>
-  <h1>Fireside Chat</h1>
-  <div id="app">
+  <h1 style="text-align: -webkit-center;"><font color="#cc2050">Chat</font></h1>
+  <div id="app" class="container">
+     <!-- Ask User  -->
     <div v-if="state == 0">
-      <h3>Welcome! Please choose a username</h3>
-      <form  class="form-group" @submit.prevent="setUsername">
-        <input type="text" class="form-control" placeholder="Username..." v-model:value="username" />
-        <input class="btn btn-primary" :disabled="username.length <= 0" type="submit" value="Join" />
-      </form>
-      <button class="btn btn-outline-primary" @click="continueWithoutUsername">Join as a Guest</button>
+      <h3><strong>Welcome</strong>! Please choose a <b>UserName</b></h3>
+      <form  class="form-inline mt-4" @submit.prevent="setUsername">
+        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Username..." v-model:value="username" />
+        <input class="btn btn-primary mb-2" :disabled="username.length <= 0" type="submit" value="Join" />
+        <button class="btn btn-outline-primary mb-2 ml-2" @click="continueWithoutUsername">Join as a Guest</button>
+      </form>  
     </div>
+
+
+
+    <!-- Chat  -->
     <div v-if="state == 1">
-      <ul id="chatbox">
-        <li v-for="message in messages">
-          <b>{{ message.user }}:</b> {{ message.message }}
+      <ul id="chatbox" class="list-group list-group-striped">
+        <li class="list-group-item mt-2 chatrow col-6" v-for="message in messages">
+            <img src="http://localhost:3000/style/img/002.jpg" alt="Avatar" style="width:100%;">
+            <p><b><font color="#cc0000">{{ message.user }} :</font></b> {{ message.message }}</p>
+            <span class="time-right">{{message.datetime}}</span>      
         </li>
       </ul>
-      <form @submit.prevent="sendMessage">
-        <input type="text" placeholder="Message..." v-model:value="message" />
-        <input type="submit" :disabled="message.length <= 0" value="Send" />
+      <form class="form-inline mt-4"  @submit.prevent="sendMessage">
+        <input type="text" class="form-control mb-2 mr-sm-2 col-4"  placeholder="Message..." v-model:value="message" />
+        <button  type="submit" class="btn btn-primary mb-2" :disabled="message.length <= 0" >Send</button>
       </form>
     </div>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script>
+  <script >
+  
     var socket = null;
     var app = new Vue({
       // State 0: select username
@@ -51,8 +59,7 @@
             if(this.message){
               socket.emit('message', this.message);
               this.message = '';
-            }
-         
+            }   
         },
         setUsername: function () {
             if(this.username){

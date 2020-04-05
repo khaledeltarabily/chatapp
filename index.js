@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
+var moment = require('moment');
 
 app.use('/style', express.static(__dirname + '/style'))
 app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'))
@@ -10,7 +11,7 @@ io.on('connection', (socket) => {
   socket.username = 'anonymous';
   socket.on('change username', (name) => socket.username = name)
   socket.on('message', (msg) => io.emit('message',
-  { 'user': socket.username, 'message': msg }))
+  { 'user': socket.username, 'message': msg, 'datetime':moment().format('hh:mm')}))
   socket.on('join', (username) => {
     if (username != null) {
       socket.username = username
