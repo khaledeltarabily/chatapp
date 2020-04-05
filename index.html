@@ -18,13 +18,12 @@
       <form  class="form-inline mt-4" @submit.prevent="setUsername">
         <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Username..." v-model:value="username" />
         <input class="btn btn-primary mb-2" :disabled="username.length <= 0" type="submit" value="Join" />
-        <button class="btn btn-outline-primary mb-2 ml-2" @click="continueWithoutUsername">Join as a Guest</button>
+        <button class="btn btn-outline-primary mb-2 ml-2" @click.prevent="continueWithoutUsername">Join as a Guest</button>
       </form>  
     </div>
 
-
-
-    <!-- Chat  -->
+   
+    <!-- ------------------------------------------ Chat  Room --------------------------------------------- -->
     <div v-if="state == 1">
       <ul id="chatbox" class="list-group list-group-striped">
         <li class="list-group-item mt-2 chatrow col-6" v-for="message in messages">
@@ -33,14 +32,20 @@
             <span class="time-right">{{message.datetime}}</span>      
         </li>
       </ul>
+      <div v-show="typingPerson.length > 0" >
+        <p v-for="username in typingPerson">
+            <em>{{username}} is typing a message... </em>
+        </p>
+      </div>
       <form class="form-inline mt-4"  @submit.prevent="sendMessage">
-        <input type="text" class="form-control mb-2 mr-sm-2 col-4"  placeholder="Message..." v-model:value="message" />
+        <input type="text" @keydown="key" class="form-control mb-2 mr-sm-2 col-4"  placeholder="Message..." v-model:value="message" />
         <button  type="submit" class="btn btn-primary mb-2" :disabled="message.length <= 0" >Send</button>
       </form>
     </div>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
   <script >
   
     var socket = null;
@@ -52,19 +57,39 @@
         messages: [],
         message: '',
         username: '',
-        state: 0
+        state: 0,
+        typing: false,
+        ready: false,
+        connections: 0,
+        timeout : null,
+        typingPerson:[],
       },
       methods: {
+        timeoutFunction: function(){
+            this.typing = false;
+            socket.emit('stopTypingMessage',this.username);
+        },
+        key: function(event) {   
+          if(this.typing == false) {
+                    this.typing = true;
+                    socket.emit('typingMessage',this.username);
+                    this.timeout = setTimeout(this.timeoutFunction, 1800);
+                } else {
+                    clearTimeout(this.timeout);
+                    this.timeout = setTimeout(this.timeoutFunction, 1800);
+                }         
+        },
         sendMessage: function () {
             if(this.message){
               socket.emit('message', this.message);
               this.message = '';
+              this.timeoutFunction();
             }   
         },
         setUsername: function () {
             if(this.username){
                 socket.emit('join', this.username);
-                this.username = '';
+                // this.username = '';
                 this.state = 1;
             }      
         },
@@ -85,6 +110,21 @@
             messageBox.scrollTop = messageBox.scrollHeight;
           });
         });
+        socket.on('join', function (username) {
+            this.username = username.username; 
+        }.bind(this));
+
+        socket.on('typingMessage', function (typingUsername) {
+          app.typingPerson.push(typingUsername);
+          console.log(typingUsername); 
+        });
+
+        socket.on('stopTypingMessage', function (typingUsername) {
+          app.typingPerson.splice(app.typingPerson.indexOf(typingUsername), 1);//remove
+          console.log(typingUsername);
+        });
+
+
       }
     });
   </script>
