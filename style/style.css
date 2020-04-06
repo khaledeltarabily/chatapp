@@ -43,6 +43,11 @@ body{
     float: left;
     color: #999;
   }
+  
+  .bodymovin-wrapper{
+    height: 100px;
+    width: 100px;
+  }
 
   
   ul.list-group.list-group-striped li:nth-of-type(odd){
