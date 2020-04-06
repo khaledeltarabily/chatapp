@@ -7,7 +7,7 @@
      <link rel="stylesheet" href="/style/bootstrap.min.css" />
      <link rel="stylesheet" href="/style/style.css" />
      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
-
+     <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Roboto:400,500&display=swap" rel="stylesheet">
      <script src="https://unpkg.com/@lottiefiles/lottie-player@0.3.0/dist/lottie-player.js"></script>
     
      
@@ -16,12 +16,12 @@
 </head>
 
 
-<body>
+<body >
     
   <h1 style="text-align: -webkit-center;"><font color="#cc2050">Chat</font></h1>
  
   <div id="app" class="container">
-    
+        
      <!-- Ask User  -->
     <div v-if="state == 0">
       <h3><strong>Welcome</strong>! Please choose a <b>UserName</b></h3>
@@ -83,6 +83,7 @@
      loadBMAnimation(loader[i]);
     }
 </script> -->
+
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
