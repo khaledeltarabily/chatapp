@@ -3,9 +3,10 @@ const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 var moment = require('moment');
+var port = process.env.PORT || 5000
 
-// app.use('/style', express.static(__dirname + '/client/src'))
-app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'))
+app.use(express.static(__dirname))
+app.get('/', (req, res) => res.render('index'))
 
 //Client Connected
 io.on('connection', (socket) => {
@@ -38,4 +39,4 @@ io.on('connection', (socket) => {
   socket.broadcast.emit("stopTypingMessage",username))
 })
 
-http.listen(3000, () => console.log('listening on port 3000'))
+http.listen(port, () => console.log('listening on port 5000'))
