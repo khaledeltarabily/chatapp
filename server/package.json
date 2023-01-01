@@ -27,6 +27,6 @@
   },
   "devDependencies": {
     "stylus": "^0.54.7",
-    "stylus-loader": "^3.0.2"
+    "stylus-loader": "^7.1.0"
   }
 }
